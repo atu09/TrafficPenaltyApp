@@ -27,4 +27,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void ClickOnCreateAccount(View view) {
+        Intent i = new Intent(MainActivity.this,signup.class);
+        startActivity(i);
+    }
 }

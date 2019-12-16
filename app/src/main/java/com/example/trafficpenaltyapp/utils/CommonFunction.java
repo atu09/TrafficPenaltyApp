@@ -22,6 +22,14 @@ public class CommonFunction {
         else
             return false;
     }
+    public static  boolean checkverificationcode(String s){
+
+        if (s!=null && s!="null" && s.length() == 4){
+            return true;
+        }
+        else
+            return false;
+    }
     public static  boolean checkPassword(String s){
 
         if (s!=null && s!="null" && s.length() >= 6){

@@ -9,10 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ResetpasswordActivity"></activity>
-        <activity android:name=".VerificationActivity" />
-        <activity android:name=".ForgotpasswordActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ResetpasswordActivity"
+            android:theme="@style/AppTheme.Fullscreen"></activity>
+        <activity android:name=".VerificationActivity"
+            android:theme="@style/AppTheme.Fullscreen"/>
+        <activity android:name=".ForgotpasswordActivity"
+            android:theme="@style/AppTheme.Fullscreen"/>
+        <activity android:name=".signup"
+            android:theme="@style/AppTheme.Fullscreen"/>
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
