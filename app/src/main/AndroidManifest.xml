@@ -13,10 +13,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".PoliceHomeActivity"
+            android:label="@string/title_activity_police_home"></activity>
+        <activity
             android:name=".UserhomeActivity"
             android:label="@string/title_activity_userhome"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".PolicehomeActivity" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".police_verification" />
         <activity android:name=".policelogin" />
         <activity

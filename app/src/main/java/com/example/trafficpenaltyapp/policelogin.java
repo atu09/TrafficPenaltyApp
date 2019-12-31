@@ -2,6 +2,7 @@ package com.example.trafficpenaltyapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +21,7 @@ public class policelogin extends AppCompatActivity implements DataInterface {
 
     Button btn_login;
     EditText edt_data;
-    Webservice_Volley volley;
+   // Webservice_Volley volley;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class policelogin extends AppCompatActivity implements DataInterface {
         btn_login=(Button) findViewById(R.id.btn_login);
         edt_data=(EditText) findViewById(R.id.edt_data);
 
-        volley=new Webservice_Volley(this,this);
+       // volley=new Webservice_Volley(this,this);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,13 +44,16 @@ public class policelogin extends AppCompatActivity implements DataInterface {
                 }
 
 
-                String url = Constants.Webserive_Url+"policedetails.php";
+               /* String url = Constants.Webserive_Url+"policedetails.php";
 
                 HashMap<String,String> params = new HashMap<>();
                 params.put("mobile number",edt_data.getText().toString());
 
 
-                volley.CallVolley(url,params,"login");
+                volley.CallVolley(url,params,"login");*/
+
+                Intent i = new Intent(policelogin.this,PoliceHomeActivity.class);
+                startActivity(i);
 
             }
         });
