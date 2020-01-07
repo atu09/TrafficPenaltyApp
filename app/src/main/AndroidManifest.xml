@@ -12,9 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ELicenseActivity"></activity>
+        <activity android:name=".CheckNotificationActivity" />
+        <activity android:name=".PenaltyDetailsActivity" />
+        <activity android:name=".CheckPenaltyActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".PoliceHomeActivity"
-            android:label="@string/title_activity_police_home"></activity>
+            android:label="@string/title_activity_police_home" />
         <activity
             android:name=".UserhomeActivity"
             android:label="@string/title_activity_userhome"
@@ -36,11 +46,7 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.Fullscreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
