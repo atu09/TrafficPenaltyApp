@@ -12,10 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ELicenseActivity"></activity>
+        <activity android:name=".GeneratePenaltyActivity"></activity>
+        <activity android:name=".ELicenseActivity" />
         <activity android:name=".CheckNotificationActivity" />
         <activity android:name=".PenaltyDetailsActivity" />
-        <activity android:name=".CheckPenaltyActivity" >
+        <activity android:name=".CheckPenaltyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,9 +46,7 @@
             android:theme="@style/AppTheme.Fullscreen" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.Fullscreen">
-
-        </activity>
+            android:theme="@style/AppTheme.Fullscreen"></activity>
     </application>
 
 </manifest>
