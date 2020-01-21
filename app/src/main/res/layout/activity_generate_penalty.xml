@@ -75,69 +75,17 @@
         android:layout_below="@+id/edt_amount"
         android:textColor="#f4f4f4"/>
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll_reasons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:text="Missing seatbelt"
-        android:paddingLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        android:textColorHint="#F0F0F0"
-        android:gravity="left|center_vertical"
-        android:buttonTint="#fff"
-        android:layout_below="@+id/txt_penaltyreason"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#F0F0F0"/>
+        android:orientation="vertical"
+        android:layout_below="@+id/txt_penaltyreason">
 
-    <CheckBox
-        android:id="@+id/checkBox2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:text="Missing Helmet"
-        android:paddingLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        android:textColorHint="#F0F0F0"
-        android:gravity="left|center_vertical"
-        android:buttonTint="#fff"
-        android:layout_below="@+id/checkBox"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#F0F0F0"/>
 
-    <CheckBox
-        android:id="@+id/checkBox3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:text="Overweight"
-        android:paddingLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        android:textColorHint="#F0F0F0"
-        android:gravity="left|center_vertical"
-        android:buttonTint="#fff"
-        android:layout_below="@+id/checkBox2"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#F0F0F0"/>
 
-    <CheckBox
-        android:id="@+id/checkBox4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:text="Missing documents"
-        android:paddingLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:textSize="16sp"
-        android:textColorHint="#F0F0F0"
-        android:gravity="left|center_vertical"
-        android:buttonTint="#fff"
-        android:layout_below="@+id/checkBox3"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#F0F0F0"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_submit"
@@ -148,7 +96,7 @@
         android:textSize="18sp"
         android:textColor="@color/colorPurple"
         android:textStyle="bold"
-        android:layout_below="@+id/checkBox4"
+        android:layout_below="@+id/ll_reasons"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="45dp"

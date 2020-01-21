@@ -12,16 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".GeneratePenaltyActivity"></activity>
-        <activity android:name=".ELicenseActivity" />
-        <activity android:name=".CheckNotificationActivity" />
-        <activity android:name=".PenaltyDetailsActivity" />
-        <activity android:name=".CheckPenaltyActivity">
+        <activity android:name=".GeneratePenaltyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ELicenseActivity" />
+        <activity android:name=".CheckNotificationActivity" />
+        <activity android:name=".PenaltyDetailsActivity" />
+        <activity android:name=".CheckPenaltyActivity">
+
         </activity>
         <activity
             android:name=".PoliceHomeActivity"
