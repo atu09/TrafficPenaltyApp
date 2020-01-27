@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPurple"
+    >
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".signup"
     android:orientation="vertical"
     android:paddingRight="32dp"
@@ -11,6 +18,21 @@
     android:background="@color/colorPurple">
 
 
+    <EditText
+        android:id="@+id/edt_regno"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:maxLength="10"
+        android:hint="Vehicle Reg. No"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="24dp"
+        android:textSize="20sp"
+        android:textColorHint="#F0F0F0"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#F0F0F0"/>
 
 
         <EditText
@@ -27,7 +49,8 @@
             android:textColorHint="#F0F0F0"
             android:gravity="center"
             android:textColor="@android:color/white"
-            android:backgroundTint="#F0F0F0"/>
+            android:backgroundTint="#F0F0F0"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/edt_penaltytime"
@@ -43,7 +66,8 @@
             android:gravity="center"
             android:layout_below="@+id/edt_penaltydate"
             android:textColor="@android:color/white"
-            android:backgroundTint="#F0F0F0"/>
+            android:backgroundTint="#F0F0F0"
+            android:visibility="gone"/>
 
     <EditText
         android:id="@+id/edt_amount"
@@ -59,7 +83,8 @@
         android:gravity="center"
         android:layout_below="@+id/edt_penaltytime"
         android:textColor="@android:color/white"
-        android:backgroundTint="#F0F0F0"/>
+        android:backgroundTint="#F0F0F0"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/txt_penaltyreason"
@@ -72,8 +97,10 @@
         android:textSize="20sp"
         android:gravity="left"
         android:textStyle="bold"
-        android:layout_below="@+id/edt_amount"
+        android:layout_below="@+id/edt_regno"
         android:textColor="#f4f4f4"/>
+
+
 
     <LinearLayout
         android:id="@+id/ll_reasons"
@@ -81,11 +108,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@+id/txt_penaltyreason">
-
-
-
-
     </LinearLayout>
+
+
+
+
+
+
+
 
     <Button
         android:id="@+id/btn_submit"
@@ -107,3 +137,5 @@
 
 
 </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>
