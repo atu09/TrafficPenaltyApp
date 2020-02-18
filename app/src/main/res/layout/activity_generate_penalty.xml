@@ -1,141 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPurple"
-    >
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".signup"
-    android:orientation="vertical"
-    android:paddingRight="32dp"
-    android:paddingLeft="32dp"
-    android:background="@color/colorPurple">
+    android:background="@color/colorPrimary">
 
-
-    <EditText
-        android:id="@+id/edt_regno"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:maxLength="10"
-        android:hint="Vehicle Reg. No"
-        android:layout_marginTop="16dp"
-        android:paddingBottom="24dp"
-        android:textSize="20sp"
-        android:textColorHint="#F0F0F0"
-        android:gravity="center"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#F0F0F0"/>
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        tools:context=".activities.SignUpActivity">
+
+
+        <EditText
+            android:id="@+id/edt_regno"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#F0F0F0"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Vehicle Reg. No"
+            android:inputType="text"
+            android:maxLength="10"
+            android:paddingBottom="24dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="#F0F0F0"
+            android:textSize="20sp" />
 
 
         <EditText
             android:id="@+id/edt_penaltydate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#F0F0F0"
             android:ems="10"
+            android:gravity="center"
+            android:hint="Penalty Date"
             android:inputType="phone"
             android:maxLength="10"
-            android:hint="Penalty Date"
-            android:layout_marginTop="16dp"
             android:paddingBottom="24dp"
-            android:textSize="20sp"
-            android:textColorHint="#F0F0F0"
-            android:gravity="center"
             android:textColor="@android:color/white"
-            android:backgroundTint="#F0F0F0"
-            android:visibility="gone"/>
+            android:textColorHint="#F0F0F0"
+            android:textSize="20sp"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/edt_penaltytime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:hint="Penalty Time"
-            android:layout_marginTop="16dp"
-            android:paddingBottom="24dp"
-            android:textSize="20sp"
-            android:textColorHint="#F0F0F0"
-            android:gravity="center"
             android:layout_below="@+id/edt_penaltydate"
-            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"
             android:backgroundTint="#F0F0F0"
-            android:visibility="gone"/>
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Penalty Time"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="24dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="#F0F0F0"
+            android:textSize="20sp"
+            android:visibility="gone" />
 
-    <EditText
-        android:id="@+id/edt_amount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Amount"
-        android:layout_marginTop="16dp"
-        android:paddingBottom="24dp"
-        android:textSize="20sp"
-        android:textColorHint="#F0F0F0"
-        android:gravity="center"
-        android:layout_below="@+id/edt_penaltytime"
-        android:textColor="@android:color/white"
-        android:backgroundTint="#F0F0F0"
-        android:visibility="gone"/>
+        <EditText
+            android:id="@+id/edt_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edt_penaltytime"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#F0F0F0"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Amount"
+            android:inputType="textPersonName"
+            android:paddingBottom="24dp"
+            android:textColor="@android:color/white"
+            android:textColorHint="#F0F0F0"
+            android:textSize="20sp"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/txt_penaltyreason"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:text="Reasons for Penalty"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:textSize="20sp"
-        android:gravity="left"
-        android:textStyle="bold"
-        android:layout_below="@+id/edt_regno"
-        android:textColor="#f4f4f4"/>
-
-
-
-    <LinearLayout
-        android:id="@+id/ll_reasons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@+id/txt_penaltyreason">
-    </LinearLayout>
+        <TextView
+            android:id="@+id/txt_penaltyreason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edt_regno"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:ems="10"
+            android:gravity="left"
+            android:text="Reasons for Penalty"
+            android:textColor="#f4f4f4"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
 
+        <LinearLayout
+            android:id="@+id/ll_reasons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_penaltyreason"
+            android:orientation="vertical" />
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:layout_below="@+id/ll_reasons"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="45dp"
+            android:background="@drawable/button_white"
+            android:text="Submit"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
 
-
-
-
-
-    <Button
-        android:id="@+id/btn_submit"
-        android:layout_width="150dp"
-        android:layout_height="45dp"
-        android:text="Submit"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        android:textColor="@color/colorPurple"
-        android:textStyle="bold"
-        android:layout_below="@+id/ll_reasons"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="45dp"
-        android:background="@drawable/button_shape"
-       />
-
-
-
-
-</RelativeLayout>
+    </RelativeLayout>
 
 </androidx.core.widget.NestedScrollView>

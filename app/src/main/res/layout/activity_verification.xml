@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".activities.SignInActivity"
     android:paddingLeft="32dp"
     android:paddingRight="32dp"
-    android:background="@color/colorPurple">
+    android:background="@color/colorPrimary">
 
     <ImageView
         android:id="@+id/imglogo"
@@ -67,11 +67,11 @@
         android:text="SUBMIT"
         android:textAllCaps="false"
         android:textSize="18sp"
-        android:textColor="@color/colorPurple"
+        android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/button_shape"
+        android:background="@drawable/button_white"
         android:layout_margin="100dp"
         android:layout_above="@+id/txt_createAccount"/>
 

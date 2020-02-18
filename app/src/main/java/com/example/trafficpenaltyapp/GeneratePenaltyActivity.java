@@ -11,14 +11,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.trafficpenaltyapp.models.PenaltyInfoVo;
 import com.example.trafficpenaltyapp.utils.CommonFunction;
 import com.example.trafficpenaltyapp.utils.Constants;
-import com.example.trafficpenaltyapp.utils.DataInterface;
-import com.example.trafficpenaltyapp.utils.Webservice_Volley;
+import com.example.trafficpenaltyapp.utils.DataCallListener;
+import com.example.trafficpenaltyapp.utils.VolleyCall;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -27,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-public class GeneratePenaltyActivity extends AppCompatActivity implements DataInterface {
+public class GeneratePenaltyActivity extends AppCompatActivity implements DataCallListener {
 
     EditText edt_penaltydate;
     EditText edt_penaltytime;
@@ -37,7 +36,7 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataIn
     Button btn_submit;
     LinearLayout ll_reasons;
 
-    Webservice_Volley volley;
+    VolleyCall volley;
 
     double total = 0.0;
 
@@ -53,9 +52,9 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataIn
         btn_submit=(Button) findViewById(R.id.btn_submit);
         ll_reasons=(LinearLayout) findViewById(R.id.ll_reasons);
 
-        volley=new Webservice_Volley(this,this);
+        volley=new VolleyCall(this,this);
 
-        String url = Constants.Webserive_Url+"get_penalty_reasons.php";
+        String url = Constants.base_url +"get_penalty_reasons.php";
         HashMap<String,String> params = new HashMap<>();
         volley.CallVolley(url,params,"get_penalty_reasons");
 
@@ -99,7 +98,7 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataIn
 
 
 
-                String url = Constants.Webserive_Url+"generate_penalty.php";
+                String url = Constants.base_url +"generate_penalty.php";
 
                 HashMap<String,String> params = new HashMap<>();
                 params.put("penalty_date",new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
@@ -125,7 +124,7 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataIn
     }
 
     @Override
-    public void getData(JSONObject jsonObject, String tag) {
+    public void OnData(JSONObject jsonObject, String tag) {
 
         if (tag.equalsIgnoreCase("get_penalty_reasons")) {
 
