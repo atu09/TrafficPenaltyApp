@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import com.example.trafficpenaltyapp.GeneratePenaltyActivity;
 import com.example.trafficpenaltyapp.R;
 
 import android.text.TextUtils;
@@ -66,6 +67,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().clear();
+        navigationView.inflateMenu(R.menu.police_drawer);
 
         TextView tvName = navigationView.getHeaderView(0).findViewById(R.id.tvName);
         TextView tvEmail = navigationView.getHeaderView(0).findViewById(R.id.tvEmail);
@@ -118,8 +121,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_my_penalty:
                 startActivity(new Intent(this, CheckPenaltyActivity.class));
                 break;
+            case R.id.nav_generate_penalty:
+                startActivity(new Intent(this, GeneratePenaltyActivity.class));
+                break;
             case R.id.nav_add_vehicle:
-                startActivity(new Intent(this, AddVehicleActivity.class));
+                startActivity(new Intent(this, SearchVehicleActivity.class));
+                break;
+            case R.id.nav_penalty_history:
+                startActivity(new Intent(this, PenaltyHistoryActivity.class));
                 break;
             case R.id.nav_payment_history:
                 startActivity(new Intent(this, PaymentHistoryActivity.class));

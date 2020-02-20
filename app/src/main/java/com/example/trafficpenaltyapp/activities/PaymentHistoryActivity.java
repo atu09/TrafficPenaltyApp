@@ -104,11 +104,7 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         };
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
         getPayments();
     }
 

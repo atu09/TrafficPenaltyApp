@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_generate_penalty"
+            android:icon="@drawable/ic_action_penalty"
+            android:title="Generate Penalty" />
+        <item
+            android:id="@+id/nav_penalty_history"
+            android:icon="@drawable/ic_action_history"
+            android:title="Penalty History" />
+        <item
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/ic_action_notification"
+            android:title="Notifications" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_action_logout"
+            android:title="Logout" />
+    </group>
+
+
+</menu>

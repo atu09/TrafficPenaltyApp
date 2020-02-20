@@ -33,11 +33,44 @@
             android:textSize="30sp"
             android:textStyle="bold" />
 
+        <RadioGroup
+            android:id="@+id/rg_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/btn_citizen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@android:color/white"
+                android:checked="true"
+                android:foregroundTint="@android:color/white"
+                android:text="Citizen"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white" />
+
+            <RadioButton
+                android:id="@+id/btn_police"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:buttonTint="@android:color/white"
+                android:foregroundTint="@android:color/white"
+                android:text="Police"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white" />
+
+        </RadioGroup>
+
         <EditText
             android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/et_shape"
             android:gravity="center"
             android:hint="Email Address"

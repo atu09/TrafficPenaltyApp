@@ -25,7 +25,7 @@
         android:background="@drawable/et_shape"
         android:gravity="center"
         android:hint="Registration Number"
-        android:imeOptions="actionNext"
+        android:imeOptions="actionDone"
         android:inputType="textCapCharacters"
         android:padding="15dp"
         android:textColor="@android:color/white"
@@ -71,13 +71,13 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_scan"
+        android:id="@+id/btn_add_new"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:background="@drawable/button_white"
         android:paddingStart="40dp"
         android:paddingEnd="40dp"
-        android:text="Scan QR to Search"
+        android:text="Add New"
         android:textColor="@color/colorPrimary" />
 
 </LinearLayout>

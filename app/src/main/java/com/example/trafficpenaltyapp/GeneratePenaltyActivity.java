@@ -45,42 +45,24 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_penalty);
 
-        edt_penaltydate=(EditText) findViewById(R.id.edt_penaltydate);
-        edt_penaltytime=(EditText) findViewById(R.id.edt_penaltytime);
-        edt_amount=(EditText) findViewById(R.id.edt_amount);
-        edt_regno=(EditText) findViewById(R.id.edt_regno);
-        btn_submit=(Button) findViewById(R.id.btn_submit);
-        ll_reasons=(LinearLayout) findViewById(R.id.ll_reasons);
+        edt_penaltydate = (EditText) findViewById(R.id.edt_penaltydate);
+        edt_penaltytime = (EditText) findViewById(R.id.edt_penaltytime);
+        edt_amount = (EditText) findViewById(R.id.edt_amount);
+        edt_regno = (EditText) findViewById(R.id.edt_regno);
+        btn_submit = (Button) findViewById(R.id.btn_submit);
+        ll_reasons = (LinearLayout) findViewById(R.id.ll_reasons);
 
-        volley=new VolleyCall(this,this);
+        volley = new VolleyCall(this, this);
 
-        String url = Constants.base_url +"get_penalty_reasons.php";
-        HashMap<String,String> params = new HashMap<>();
-        volley.CallVolley(url,params,"get_penalty_reasons");
+        String url = Constants.base_url + "get_penalty_reasons.php";
+        HashMap<String, String> params = new HashMap<>();
+        volley.CallVolley(url, params, "get_penalty_reasons");
 
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (!CommonFunction.checkString(edt_penaltydate.getText().toString()))
-                {
-                    edt_penaltydate.setError("Enter valid date");
-                    return;
-                }
 
-                if (!CommonFunction.checkString(edt_penaltytime.getText().toString()))
-                {
-                    edt_penaltytime.setError("Enter Valid time");
-                    return;
-                }
-
-                if (!CommonFunction.checkString(edt_amount.getText().toString()))
-                {
-                    edt_amount.setError("Enter Valid Amount");
-                    return;
-                }*/
-
-                if (!CommonFunction.checkString(edt_regno.getText().toString()))
-                {
+                if (!CommonFunction.checkString(edt_regno.getText().toString())) {
                     edt_regno.setError("Enter Vehicle Registration Details.");
                     return;
                 }
@@ -88,7 +70,7 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
                 StringBuilder sb = new StringBuilder();
 
                 if (ll_reasons.getChildCount() > 0) {
-                    for (int i =0;i<ll_reasons.getChildCount();i++) {
+                    for (int i = 0; i < ll_reasons.getChildCount(); i++) {
                         CheckBox chk = (CheckBox) ll_reasons.getChildAt(i);
                         if (chk.isChecked()) {
                             sb.append(chk.getText().toString()).append(",");
@@ -97,28 +79,25 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
                 }
 
 
+                String url = Constants.base_url + "generate_penalty.php";
 
-                String url = Constants.base_url +"generate_penalty.php";
+                HashMap<String, String> params = new HashMap<>();
+                params.put("penalty_date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+                params.put("penalty_time", new SimpleDateFormat("HH:mm").format(new Date()));
+                params.put("amount", "" + total);
+                params.put("penalty_reason", sb.toString());
+                params.put("penalty_status", "pending");
+                params.put("reg_number", edt_regno.getText().toString());
+                params.put("rcbook_id", edt_regno.getText().toString());
+                params.put("iv_id", "");
 
-                HashMap<String,String> params = new HashMap<>();
-                params.put("penalty_date",new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-                params.put("penalty_time",new SimpleDateFormat("HH:mm").format(new Date()));
-                params.put("amount","" + total);
-                params.put("penalty_reason",sb.toString());
-                params.put("penalty_status","pending");
-                params.put("reg_number",edt_regno.getText().toString());
-                params.put("rcbook_id",edt_regno.getText().toString());
-                params.put("iv_id","");
+                Log.d("REQ", params.toString());
 
-                Log.d("REQ",params.toString());
-
-                volley.CallVolley(url,params,"generate_penalty");
+                volley.CallVolley(url, params, "generate_penalty");
 
 
             }
         });
-
-
 
 
     }
@@ -128,7 +107,7 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
 
         if (tag.equalsIgnoreCase("get_penalty_reasons")) {
 
-            PenaltyInfoVo penaltyInfoVo = new Gson().fromJson(jsonObject.toString(),PenaltyInfoVo.class);
+            PenaltyInfoVo penaltyInfoVo = new Gson().fromJson(jsonObject.toString(), PenaltyInfoVo.class);
 
             if (penaltyInfoVo != null) {
 
@@ -136,12 +115,12 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
 
                     if (penaltyInfoVo.getResult().size() > 0) {
 
-                        for (int i =0;i<penaltyInfoVo.getResult().size();i++) {
+                        for (int i = 0; i < penaltyInfoVo.getResult().size(); i++) {
 
-                            View vs = LayoutInflater.from(this).inflate(R.layout.layout_checkbox,null);
+                            View vs = LayoutInflater.from(this).inflate(R.layout.layout_checkbox, null);
 
-                            final CheckBox chk = (CheckBox)vs.findViewById(R.id.checkBox);
-                            chk.setText(penaltyInfoVo.getResult().get(i).getReasonDetails() + "(Rs. " + penaltyInfoVo.getResult().get(i).getAmount() +")");
+                            final CheckBox chk = (CheckBox) vs.findViewById(R.id.checkBox);
+                            chk.setText(penaltyInfoVo.getResult().get(i).getReasonDetails() + "(Rs. " + penaltyInfoVo.getResult().get(i).getAmount() + ")");
                             chk.setTag(penaltyInfoVo.getResult().get(i).getAmount());
 
                             chk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -149,16 +128,13 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
                                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                     if (isChecked) {
                                         total = total + Double.parseDouble(chk.getTag().toString());
-                                    }
-                                    else {
+                                    } else {
                                         total = total - Double.parseDouble(chk.getTag().toString());
                                     }
                                 }
                             });
 
                             ll_reasons.addView(vs);
-
-
 
 
                         }
@@ -171,8 +147,7 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
             }
 
 
-        }
-        else {
+        } else {
             Toast.makeText(this, jsonObject.toString(), Toast.LENGTH_SHORT).show();
         }
 

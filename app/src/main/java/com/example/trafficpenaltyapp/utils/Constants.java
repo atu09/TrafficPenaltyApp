@@ -18,7 +18,7 @@ public class Constants {
 
     private static Constants constants;
 
-    public static final String base_url = "http://192.168.2.4/project_tpa/api/";
+    public static final String base_url = "http://192.168.2.8/project_tpa/api/";
 
     public static Constants shared() {
         if (constants == null) {

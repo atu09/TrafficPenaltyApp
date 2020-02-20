@@ -68,11 +68,6 @@ public class NotificationsActivity extends AppCompatActivity {
         };
         ListView listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         getNotifications();
     }
 
