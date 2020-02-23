@@ -3,14 +3,13 @@
     android:id="@+id/checkBox"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
-    android:backgroundTint="#F0F0F0"
-    android:buttonTint="#fff"
-    android:ems="10"
-    android:gravity="left|center_vertical"
-    android:paddingLeft="16dp"
-    android:text="Missing seatbelt"
+    android:layout_marginTop="15dp"
+    android:backgroundTint="#FFF"
+    android:buttonTint="#FFF"
+    android:gravity="start|center_vertical"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
     android:textColor="@android:color/white"
-    android:textColorHint="#F0F0F0"
-    android:textSize="16sp" />
+    android:textColorHint="#FFF"
+    android:textSize="15sp" />
 
