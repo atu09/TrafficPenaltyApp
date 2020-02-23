@@ -51,7 +51,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
-            android:name="com.traffic.penalty.GeneratePenaltyActivity"
+            android:name="com.traffic.penalty.activities.GeneratePenaltyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity

@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.traffic.penalty.GeneratePenaltyActivity;
 import com.traffic.penalty.R;
 
 import android.text.TextUtils;

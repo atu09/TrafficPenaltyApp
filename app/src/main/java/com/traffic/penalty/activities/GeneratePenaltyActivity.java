@@ -1,4 +1,4 @@
-package com.traffic.penalty;
+package com.traffic.penalty.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.traffic.penalty.R;
 import com.traffic.penalty.models.PenaltyReasonItem;
 import com.traffic.penalty.utils.Constants;
 import com.traffic.penalty.utils.DataCallListener;
@@ -41,7 +42,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import atirek.pothiwala.picker.FileConfigure;
 import atirek.pothiwala.picker.FilePicker;
 import atirek.pothiwala.utility.helper.DateHelper;
 import atirek.pothiwala.utility.helper.PermissionHelper;
