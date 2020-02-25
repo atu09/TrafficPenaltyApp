@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1066136659538",
+    "firebase_url": "https://traffic-penalty.firebaseio.com",
+    "project_id": "traffic-penalty",
+    "storage_bucket": "traffic-penalty.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066136659538:android:14f3c81db19563372ba18b",
+        "android_client_info": {
+          "package_name": "com.traffic.penalty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1066136659538-fs3klb8e6jnfvh79bt7jevted01r27qa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgmPYMCXzVTKXqbAcwtXMCKq_aDJVPjZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1066136659538-fs3klb8e6jnfvh79bt7jevted01r27qa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

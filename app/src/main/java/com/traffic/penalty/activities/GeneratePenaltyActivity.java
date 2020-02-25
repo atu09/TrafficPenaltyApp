@@ -170,10 +170,9 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
                     list = new ArrayList<>();
                 }
                 for (PenaltyReasonItem penaltyReasonItem : list) {
-                    View checkboxView = LayoutInflater.from(this).inflate(R.layout.layout_checkbox, null);
+                    View checkboxView = LayoutInflater.from(this).inflate(R.layout.cell_checkbox, null);
 
                     final CheckBox checkBox = (CheckBox) checkboxView.findViewById(R.id.checkBox);
-
                     checkBox.setText(String.format(Locale.getDefault(), "%s (Rs. %s)", penaltyReasonItem.reason_details, penaltyReasonItem.amount));
                     checkBox.setTag(penaltyReasonItem.amount);
 
@@ -185,7 +184,7 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
                             } else {
                                 total = total - Double.parseDouble(checkBox.getTag().toString());
                             }
-                            tvPenalty.setText(String.format(Locale.getDefault(), "Total Penalty: Rs. %.0f", total));
+                            tvPenalty.setText(String.format(Locale.getDefault(), "Total Penalty : Rs. %.0f", total));
 
                         }
                     });

@@ -1,5 +1,6 @@
 package com.traffic.penalty.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,6 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.traffic.penalty.R;
 import com.traffic.penalty.utils.Constants;
 import com.traffic.penalty.utils.DataCallListener;
@@ -18,6 +23,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import atirek.pothiwala.utility.helper.IntentHelper;
 import atirek.pothiwala.utility.helper.ValidationHelper;
 
 public class CitizenSignUpActivity extends AppCompatActivity {
@@ -69,31 +75,49 @@ public class CitizenSignUpActivity extends AppCompatActivity {
                     return;
                 }
 
-                String url = Constants.base_url + "registration.php";
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put("u_name", et_username.getText().toString().trim());
-                params.put("m_no", et_mobile.getText().toString().trim());
-                params.put("email", et_email.getText().toString().trim());
-                params.put("psw", et_password.getText().toString().trim());
-                params.put("photo", "");
-
-                VolleyCall volley = new VolleyCall(CitizenSignUpActivity.this, new DataCallListener() {
+                FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
-                    public void OnData(JSONObject jsonObject, String tag) {
-                        if (jsonObject.optInt("response") == 1) {
-                            Constants.shared().setCitizen(jsonObject.optString("data"));
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            signUp(task.getResult().getToken());
+                        } else {
+                            IntentHelper.popToast(CitizenSignUpActivity.this, "Failed to Connect");
                         }
-                        if (!jsonObject.optString("message").isEmpty()) {
-                            Toast.makeText(CitizenSignUpActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
-                        }
-
-                        checkLogin();
                     }
                 });
-                volley.CallVolleyRequest(url, params, "registration");
+
+
             }
         });
+    }
+
+    private void signUp(String token) {
+
+
+        String url = Constants.base_url + "registration.php";
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("u_name", et_username.getText().toString().trim());
+        params.put("m_no", et_mobile.getText().toString().trim());
+        params.put("email", et_email.getText().toString().trim());
+        params.put("psw", et_password.getText().toString().trim());
+        params.put("photo", "");
+        params.put("token", token);
+
+        VolleyCall volley = new VolleyCall(CitizenSignUpActivity.this, new DataCallListener() {
+            @Override
+            public void OnData(JSONObject jsonObject, String tag) {
+                if (jsonObject.optInt("response") == 1) {
+                    Constants.shared().setCitizen(jsonObject.optString("data"));
+                }
+                if (!jsonObject.optString("message").isEmpty()) {
+                    Toast.makeText(CitizenSignUpActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                }
+
+                checkLogin();
+            }
+        });
+        volley.CallVolleyRequest(url, params, "registration");
     }
 
     public void OnExistingAccount(View view) {

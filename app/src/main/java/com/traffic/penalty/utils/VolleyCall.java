@@ -1,7 +1,9 @@
 package com.traffic.penalty.utils;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,18 +15,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.traffic.penalty.R;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by MTAJ-08 on 12/5/2016.
- */
+import atirek.pothiwala.utility.helper.Loader;
+
 public class VolleyCall {
 
     private RequestQueue requestQueue;
@@ -32,16 +33,23 @@ public class VolleyCall {
 
     private DataCallListener dataCallListener;
 
-    private ProgressDialog progressDialog;
+    private Dialog progressDialog;
 
     public VolleyCall(Context context, DataCallListener dataCallListener) {
         this.context = context;
         this.requestQueue = Volley.newRequestQueue(this.context);
         this.dataCallListener = dataCallListener;
 
-        progressDialog = new ProgressDialog(this.context);
-        progressDialog.setMessage("Loading");
-        progressDialog.setIndeterminate(true);
+        Loader loader = new Loader(context);
+        loader.setColor(R.color.colorPrimary);
+        loader.setCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                requestQueue.cancelAll("post");
+                requestQueue.cancelAll("multipart");
+            }
+        });
+        progressDialog = loader.getDialog();
     }
 
 
@@ -82,6 +90,7 @@ public class VolleyCall {
             request.setRetryPolicy(new DefaultRetryPolicy(600000,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            request.setTag("post");
             requestQueue.add(request);
 
         } catch (Exception e) {
@@ -142,6 +151,7 @@ public class VolleyCall {
             request.setRetryPolicy(new DefaultRetryPolicy(600000,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            request.setTag("multipart");
             requestQueue.add(request);
 
         } catch (Exception e) {

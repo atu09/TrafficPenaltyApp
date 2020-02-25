@@ -82,7 +82,7 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
                 tvRegNo.setText(paymentItem.reg_number);
 
                 String date = DateHelper.getDate(paymentItem.penalty_date, "yyyy-MM-dd", "dd, MMM yyyy");
-                String time = DateHelper.getDate(paymentItem.penalty_time, "HH:mm", "hh:mm a");
+                String time = DateHelper.getDate(paymentItem.penalty_time, "HH.mm", "hh:mm a");
                 tvDate.setText(String.format(Locale.getDefault(), "Generated on %s %s", date, time).trim());
                 tvStatus.setText(TextHelper.capitalizeWord(paymentItem.penalty_status));
                 tvAmount.setText(String.format(Locale.getDefault(), "Rs. %s", paymentItem.amount));
@@ -112,7 +112,9 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        openPenaltyDialog(paymentItem.penalty_reason);
+                        Intent intent = new Intent(PenaltyHistoryActivity.this, PenaltyDetailsActivity.class);
+                        intent.putExtra("penalty", new Gson().toJson(paymentItem));
+                        startActivity(intent);
                     }
                 });
 
@@ -222,7 +224,13 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
     public void openPenaltyDialog(String reasons) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Penalty Reasons");
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.cell_picker);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.cell_picker) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                return super.getView(position, convertView, parent);
+            }
+        };
         arrayAdapter.addAll(TextUtils.split(reasons, ","));
         builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,9 +15,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.traffic.penalty.R;
 import com.traffic.penalty.models.PaymentItem;
+import com.traffic.penalty.models.VehicleItem;
 import com.traffic.penalty.utils.Constants;
 import com.traffic.penalty.utils.DataCallListener;
 import com.traffic.penalty.utils.VolleyCall;
@@ -31,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import atirek.pothiwala.picker.FilePicker;
 import atirek.pothiwala.utility.helper.DateHelper;
 import atirek.pothiwala.utility.helper.TextHelper;
 import atirek.pothiwala.utility.helper.Tools;
@@ -59,14 +61,14 @@ public class PaymentHistoryActivity extends AppCompatActivity {
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-                PaymentItem paymentItem = payments.get(position);
+                final PaymentItem paymentItem = payments.get(position);
                 if (convertView == null) {
                     convertView = getLayoutInflater().inflate(R.layout.cell_payment, null);
                 }
 
                 TextView tvRegNo = convertView.findViewById(R.id.tvRegNo);
                 TextView tvDate = convertView.findViewById(R.id.tvDate);
-                Button btnPenalty = convertView.findViewById(R.id.btnPenalty);
+                Button btnVehicle = convertView.findViewById(R.id.btnVehicle);
 
                 Button btnMakePayment = convertView.findViewById(R.id.btnMakePayment);
 
@@ -93,13 +95,12 @@ public class PaymentHistoryActivity extends AppCompatActivity {
 
                     }
                 });
-                btnPenalty.setOnClickListener(new View.OnClickListener() {
+                btnVehicle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        getVehicle(paymentItem.reg_number);
                     }
                 });
-
 
                 return convertView;
             }
@@ -108,6 +109,41 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         getPayments();
+    }
+
+    private void getVehicle(String reg_no) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("reg_number", reg_no);
+
+        VolleyCall volleyCall = new VolleyCall(this, new DataCallListener() {
+            @Override
+            public void OnData(JSONObject jsonObject, String tag) {
+
+                if (jsonObject.has("result")) {
+
+                    Gson gson = new Gson();
+
+                    Type listType = new TypeToken<List<VehicleItem>>() {
+                    }.getType();
+                    List<VehicleItem> list = gson.fromJson(jsonObject.opt("result").toString(), listType);
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+
+                    if (!list.isEmpty()) {
+                        Intent intent = new Intent(PaymentHistoryActivity.this, AddVehicleActivity.class);
+                        intent.putExtra("vehicle", gson.toJson(list.get(0)));
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(PaymentHistoryActivity.this, "Vehicle not found.", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+
+            }
+        });
+        volleyCall.CallVolleyRequest(Constants.base_url + "get_vehicle_reg_number.php", params, "get_vehicle");
     }
 
     private void getPayments() {
@@ -132,29 +168,6 @@ public class PaymentHistoryActivity extends AppCompatActivity {
             }
         });
         volley.CallVolleyRequest(url, params, "get_payment");
-    }
-
-    public void openPenaltyDialog(String reasons) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Penalty Reasons");
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.cell_picker);
-        arrayAdapter.addAll(TextUtils.split(reasons, ","));
-        builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.setAdapter(arrayAdapter, null);
-
-        final AlertDialog alertDialog = builder.create();
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Tools.getColor(PaymentHistoryActivity.this, R.color.colorBlack));
-                alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Tools.getColor(PaymentHistoryActivity.this, R.color.colorBlack));
-            }
-        });
-        alertDialog.show();
     }
 
 }

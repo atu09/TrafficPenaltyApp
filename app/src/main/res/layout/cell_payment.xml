@@ -46,14 +46,14 @@
         android:padding="15dp">
 
         <Button
-            android:id="@+id/btnPenalty"
+            android:id="@+id/btnVehicle"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:background="@drawable/button_purple"
             android:paddingStart="25dp"
             android:paddingEnd="25dp"
             android:textColor="@color/colorAccent"
-            android:text="Penalty Details"
+            android:text="Vehicle Details"
             android:textAllCaps="false" />
 
         <View

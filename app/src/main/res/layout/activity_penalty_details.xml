@@ -6,15 +6,32 @@
     android:background="@color/colorPrimary"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        android:padding="20dp"
-        android:text="Generate Penalty"
-        android:textColor="@color/colorAccent"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="Penalty Details"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generated on 22, Jul 2005"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -31,36 +48,28 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:background="@drawable/et_shape"
+                android:orientation="vertical"
+                android:padding="15dp">
 
-                <EditText
-                    android:id="@+id/et_reg"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/et_shape"
-                    android:gravity="center"
-                    android:hint="Vehicle Number"
-                    android:inputType="textCapCharacters"
-                    android:maxLength="10"
-                    android:padding="15dp"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vehicle Number"
                     android:textColor="@android:color/white"
-                    android:textColorHint="@color/colorAccent" />
+                    android:textSize="12sp" />
 
-                <View
-                    android:layout_width="10dp"
-                    android:layout_height="0dp" />
-
-                <atirek.pothiwala.utility.views.SquareImageButton
-                    android:id="@+id/btn_scan"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/et_shape"
-                    android:scaleType="centerInside"
-                    android:tint="@color/colorAccent"
-                    app:srcCompat="@drawable/ic_action_qr" />
+                <TextView
+                    android:id="@+id/tv_reg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/transparent"
+                    android:hint="Vehicle Number"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -68,10 +77,9 @@
                 android:id="@+id/ivMedia"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/et_shape"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_add"
                 app:riv_corner_radius="5dp" />
 
             <TextView
@@ -80,9 +88,9 @@
                 android:layout_marginTop="20dp"
                 android:ems="10"
                 android:text="Reasons for Penalty"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/layout_reasons"
@@ -94,6 +102,7 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -115,13 +124,13 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/btn_generate"
+            android:id="@+id/btnMakePayment"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:background="@drawable/button_white"
             android:paddingStart="25dp"
             android:paddingEnd="25dp"
-            android:text="Generate"
+            android:text="Make Payment"
             android:textAllCaps="false"
             android:textColor="@color/colorPrimary"
             android:textSize="15sp"
