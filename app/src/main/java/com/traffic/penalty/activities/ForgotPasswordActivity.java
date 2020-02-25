@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 import atirek.pothiwala.utility.helper.ValidationHelper;
 
-public class ForgotPasswordActivity extends AppCompatActivity implements DataCallListener {
+public class ForgotPasswordActivity extends AppCompatActivity {
 
     Button btn_submit;
     EditText et_email;
@@ -47,6 +47,11 @@ public class ForgotPasswordActivity extends AppCompatActivity implements DataCal
                     @Override
                     public void OnData(JSONObject jsonObject, String tag) {
                         if (jsonObject.optInt("response") == 1) {
+                            Intent intent = new Intent(ForgotPasswordActivity.this, VerificationActivity.class);
+                            intent.putExtra("code", jsonObject.optString("verificationcode"));
+                            intent.putExtra("id", jsonObject.optString("id"));
+                            intent.putExtra("citizen", true);
+                            startActivity(intent);
                             finish();
                         }
                         if (!jsonObject.optString("message").isEmpty()) {
@@ -61,16 +66,5 @@ public class ForgotPasswordActivity extends AppCompatActivity implements DataCal
                 volley.CallVolleyRequest(url, params, "forgot_password");
             }
         });
-    }
-
-    @Override
-    public void OnData(JSONObject jsonObject, String tag) {
-
-        if (jsonObject.optInt("response") == 1) {
-            finish();
-        }
-        if (!jsonObject.optString("message").isEmpty()) {
-            Toast.makeText(this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
-        }
     }
 }

@@ -2,9 +2,12 @@ package com.traffic.penalty.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -28,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import atirek.pothiwala.picker.FilePicker;
 import atirek.pothiwala.utility.helper.DateHelper;
 import atirek.pothiwala.utility.helper.TextHelper;
 import atirek.pothiwala.utility.helper.Tools;
@@ -42,7 +46,6 @@ public class PaymentHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_history);
-
 
         adapter = new ArrayAdapter<PaymentItem>(this, R.layout.cell_payment, payments) {
             @Override
@@ -73,9 +76,9 @@ public class PaymentHistoryActivity extends AppCompatActivity {
                 tvRegNo.setText(paymentItem.reg_number);
                 tvDate.setText(DateHelper.getDate(paymentItem.payment_date, "yyyy-MM-dd", "'Posted on' dd, MMM yyyy"));
                 tvStatus.setText(TextHelper.capitalizeWord(paymentItem.penalty_status));
-                tvAmount.setText(String.format(Locale.getDefault(),"Rs. %s", paymentItem.amount));
+                tvAmount.setText(String.format(Locale.getDefault(), "Rs. %s", paymentItem.amount));
 
-                if (paymentItem.penalty_status.equalsIgnoreCase("pending")){
+                if (paymentItem.penalty_status.equalsIgnoreCase("pending")) {
                     tvStatus.setTextColor(Tools.getColor(PaymentHistoryActivity.this, android.R.color.holo_red_dark));
                     btnMakePayment.setVisibility(View.VISIBLE);
 
@@ -130,4 +133,28 @@ public class PaymentHistoryActivity extends AppCompatActivity {
         });
         volley.CallVolleyRequest(url, params, "get_payment");
     }
+
+    public void openPenaltyDialog(String reasons) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Penalty Reasons");
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.cell_picker);
+        arrayAdapter.addAll(TextUtils.split(reasons, ","));
+        builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setAdapter(arrayAdapter, null);
+
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Tools.getColor(PaymentHistoryActivity.this, R.color.colorBlack));
+                alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Tools.getColor(PaymentHistoryActivity.this, R.color.colorBlack));
+            }
+        });
+        alertDialog.show();
+    }
+
 }

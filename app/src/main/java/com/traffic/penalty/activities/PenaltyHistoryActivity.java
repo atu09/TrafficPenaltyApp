@@ -2,10 +2,13 @@ package com.traffic.penalty.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -46,6 +49,9 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_penalty_history);
+
+        TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
+        ListView listView = findViewById(R.id.listView);
 
         adapter = new ArrayAdapter<PenaltyItem>(this, R.layout.cell_penalty, penalties) {
             @Override
@@ -103,25 +109,34 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
                     }
                 });
 
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openPenaltyDialog(paymentItem.penalty_reason);
+                    }
+                });
 
                 return convertView;
             }
         };
-        ListView listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
         Intent intent = getIntent();
         if (intent.hasExtra("reg_no")) {
             payVisibility = View.VISIBLE;
             reg_no = intent.getStringExtra("reg_no");
+            tvTitle.setText("My Penalty - " + reg_no);
+
             checkPenalties();
         } else {
             payVisibility = View.GONE;
+            tvTitle.setText("Penalty History");
+
             getPenalties();
         }
     }
 
     private void checkPenalties() {
-        String url = Constants.base_url + "checkpenalty.php";
+        String url = Constants.base_url + "check_penalty.php";
         HashMap<String, String> params = new HashMap<>();
         params.put("reg_number", reg_no);
         VolleyCall volley = new VolleyCall(this, new DataCallListener() {
@@ -145,7 +160,7 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
     }
 
     private void getPenalties() {
-        String url = Constants.base_url + "get_all_penalty.php";
+        String url = Constants.base_url + "get_penalty_list_by_police.php";
         VolleyCall volley = new VolleyCall(this, new DataCallListener() {
             @Override
             public void OnData(JSONObject jsonObject, String tag) {
@@ -163,7 +178,10 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
 
             }
         });
-        volley.CallVolleyRequest(url, new HashMap<String, String>(), "get_all_penalty");
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("police_id", Constants.shared().getPolice("police_id"));
+        volley.CallVolleyRequest(url, params, "get_penalty");
     }
 
     private void getVehicle(String reg_no) {
@@ -199,5 +217,28 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
             }
         });
         volleyCall.CallVolleyRequest(Constants.base_url + "get_vehicle_reg_number.php", params, "get_vehicle");
+    }
+
+    public void openPenaltyDialog(String reasons) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Penalty Reasons");
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.cell_picker);
+        arrayAdapter.addAll(TextUtils.split(reasons, ","));
+        builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setAdapter(arrayAdapter, null);
+
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Tools.getColor(PenaltyHistoryActivity.this, R.color.colorBlack));
+                alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Tools.getColor(PenaltyHistoryActivity.this, R.color.colorBlack));
+            }
+        });
+        alertDialog.show();
     }
 }

@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 import atirek.pothiwala.utility.helper.ValidationHelper;
 
-public class CitizenSignUpActivity extends AppCompatActivity implements DataCallListener {
+public class CitizenSignUpActivity extends AppCompatActivity {
     EditText et_username;
     EditText et_mobile;
     EditText et_email;
@@ -78,22 +78,22 @@ public class CitizenSignUpActivity extends AppCompatActivity implements DataCall
                 params.put("psw", et_password.getText().toString().trim());
                 params.put("photo", "");
 
-                VolleyCall volley = new VolleyCall(CitizenSignUpActivity.this, CitizenSignUpActivity.this);
+                VolleyCall volley = new VolleyCall(CitizenSignUpActivity.this, new DataCallListener() {
+                    @Override
+                    public void OnData(JSONObject jsonObject, String tag) {
+                        if (jsonObject.optInt("response") == 1) {
+                            Constants.shared().setCitizen(jsonObject.optString("data"));
+                        }
+                        if (!jsonObject.optString("message").isEmpty()) {
+                            Toast.makeText(CitizenSignUpActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                        }
+
+                        checkLogin();
+                    }
+                });
                 volley.CallVolleyRequest(url, params, "registration");
             }
         });
-    }
-
-    @Override
-    public void OnData(JSONObject jsonObject, String tag) {
-        if (jsonObject.optInt("response") == 1) {
-            Constants.shared().setCitizen(jsonObject.optString("data"));
-        }
-        if (!jsonObject.optString("message").isEmpty()) {
-            Toast.makeText(this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
-        }
-
-        checkLogin();
     }
 
     public void OnExistingAccount(View view) {

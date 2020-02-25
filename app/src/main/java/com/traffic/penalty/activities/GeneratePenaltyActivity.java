@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
@@ -45,33 +46,40 @@ import java.util.Map;
 import atirek.pothiwala.picker.FilePicker;
 import atirek.pothiwala.utility.helper.DateHelper;
 import atirek.pothiwala.utility.helper.PermissionHelper;
+import atirek.pothiwala.utility.helper.Tools;
 import atirek.pothiwala.utility.helper.ValidationHelper;
+import atirek.pothiwala.utility.views.SquareImageButton;
 import atirek.pothiwala.utility.views.SquareImageView;
 
 public class GeneratePenaltyActivity extends AppCompatActivity implements DataCallListener {
 
-    EditText et_reg;
-    Button btn_generate;
-    LinearLayout layout_reasons;
-    SquareImageView ivMedia;
-    double total = 0.0;
+    private TextView tvPenalty;
+    private EditText et_reg;
+    private Button btn_generate;
+    private SquareImageButton btn_scan;
+    private LinearLayout layout_reasons;
+    private SquareImageView ivMedia;
+    private double total = 0.0;
 
-    FilePicker filePicker;
-    String[] permissions = new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    private FilePicker filePicker;
+    private String[] permissions = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
     };
 
-    String media_id = "";
+    private String media_id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_penalty);
 
+        tvPenalty = (TextView) findViewById(R.id.tvPenalty);
         et_reg = (EditText) findViewById(R.id.et_reg);
         ivMedia = (SquareImageView) findViewById(R.id.ivMedia);
         layout_reasons = (LinearLayout) findViewById(R.id.layout_reasons);
         btn_generate = (Button) findViewById(R.id.btn_generate);
+        btn_scan = (SquareImageButton) findViewById(R.id.btn_scan);
 
         btn_generate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +93,20 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
             public void onClick(View view) {
                 if (!PermissionHelper.checkPermissions(GeneratePenaltyActivity.this, permissions)) {
                     PermissionHelper.requestPermissions(GeneratePenaltyActivity.this, permissions, 1);
+                    return;
                 }
                 openPickerDialog();
+            }
+        });
+
+        btn_scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!PermissionHelper.checkPermissions(GeneratePenaltyActivity.this, permissions)) {
+                    PermissionHelper.requestPermissions(GeneratePenaltyActivity.this, permissions, 1);
+                    return;
+                }
+                startActivityForResult(new Intent(GeneratePenaltyActivity.this, ScannerActivity.class), 1111);
             }
         });
 
@@ -101,7 +121,13 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
     }
 
     private void generatePenalty() {
+
         if (!ValidationHelper.isValidString(et_reg, 10)) {
+            return;
+        }
+
+        if (total <= 0) {
+            Toast.makeText(this, "Select at least one reason to generate penalty.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -117,10 +143,11 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
         }
 
         HashMap<String, String> params = new HashMap<>();
+        params.put("police_id", Constants.shared().getPolice("police_id"));
         params.put("penalty_date", DateHelper.getDate(new Date(), "yyyy-MM-dd"));
         params.put("penalty_time", DateHelper.getDate(new Date(), "HH:mm"));
-        params.put("amount", String.valueOf(total));
         params.put("penalty_reason", builder.toString());
+        params.put("amount", String.valueOf(total));
         params.put("penalty_status", "pending");
         params.put("reg_number", et_reg.getText().toString());
         params.put("rcbook_id", "");
@@ -147,7 +174,7 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
 
                     final CheckBox checkBox = (CheckBox) checkboxView.findViewById(R.id.checkBox);
 
-                    checkBox.setText(String.format(Locale.getDefault(), "%s(Rs. %s)", penaltyReasonItem.reasonDetails, penaltyReasonItem.amount));
+                    checkBox.setText(String.format(Locale.getDefault(), "%s (Rs. %s)", penaltyReasonItem.reason_details, penaltyReasonItem.amount));
                     checkBox.setTag(penaltyReasonItem.amount);
 
                     checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -158,6 +185,8 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
                             } else {
                                 total = total - Double.parseDouble(checkBox.getTag().toString());
                             }
+                            tvPenalty.setText(String.format(Locale.getDefault(), "Total Penalty: Rs. %.0f", total));
+
                         }
                     });
 
@@ -184,6 +213,8 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
             public void onClick(DialogInterface dialog, int position) {
                 if (filePicker == null) {
                     filePicker = new FilePicker(GeneratePenaltyActivity.this, getPackageName());
+                    filePicker.setVideoQuality(FilePicker.VideoQuality.LOW);
+                    filePicker.setRecordingLimit(30);
                 }
 
                 if (position == 0) {
@@ -193,13 +224,29 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
                 }
             }
         });
-        builder.show();
+
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Tools.getColor(GeneratePenaltyActivity.this, R.color.colorBlack));
+                alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Tools.getColor(GeneratePenaltyActivity.this, R.color.colorBlack));
+            }
+        });
+        alertDialog.show();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        filePicker.handleActivityResult(requestCode, resultCode, data, fileCallbacks);
+
+        if (requestCode == 1111) {
+            if (resultCode == RESULT_OK && data != null) {
+                et_reg.setText(data.getStringExtra("reg_no"));
+            }
+        } else {
+            filePicker.handleActivityResult(requestCode, resultCode, data, fileCallbacks);
+        }
     }
 
     FilePicker.Callbacks fileCallbacks = new FilePicker.Callbacks() {

@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.gson.Gson;
+import com.traffic.penalty.models.VehicleItem;
+
 import org.json.JSONObject;
 
 /**
@@ -46,8 +49,32 @@ public class Constants {
         return "";
     }
 
-    public boolean isCitizen(){
+    public void setVehicle(@NonNull String json) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("vehicle", json);
+        editor.apply();
+    }
+
+    public String getVehicle(@NonNull String key) {
+        try {
+            JSONObject jsonObject = new JSONObject(sharedPreferences.getString("vehicle", ""));
+            return jsonObject.optString(key, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public VehicleItem getVehicle() {
+        return new Gson().fromJson(sharedPreferences.getString("vehicle", ""), VehicleItem.class);
+    }
+
+    public boolean isCitizen() {
         return sharedPreferences.contains("citizen");
+    }
+
+    public boolean isVehicle() {
+        return sharedPreferences.contains("vehicle");
     }
 
     public void setCitizen(@NonNull String key, @Nullable Object value) {
@@ -64,7 +91,7 @@ public class Constants {
         }
     }
 
-    public boolean isPolice(){
+    public boolean isPolice() {
         return sharedPreferences.contains("police");
     }
 

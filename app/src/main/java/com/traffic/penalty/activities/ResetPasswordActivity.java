@@ -2,6 +2,7 @@ package com.traffic.penalty.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,11 +20,13 @@ import java.util.HashMap;
 
 import atirek.pothiwala.utility.helper.ValidationHelper;
 
-public class ResetPasswordActivity extends AppCompatActivity implements DataCallListener {
+public class ResetPasswordActivity extends AppCompatActivity {
 
     Button btn_reset;
     EditText et_newPassword;
     EditText et_confirmPassword;
+
+    String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,47 +37,52 @@ public class ResetPasswordActivity extends AppCompatActivity implements DataCall
         et_confirmPassword = (EditText) findViewById(R.id.et_confirmPassword);
         btn_reset = (Button) findViewById(R.id.btn_reset);
 
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("user_id")) {
+            user_id = intent.getStringExtra("user_id");
 
-        btn_reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            btn_reset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                if (!ValidationHelper.isValidString(et_newPassword, 3)) {
-                    return;
+                    if (!ValidationHelper.isValidString(et_newPassword, 3)) {
+                        return;
+                    }
+
+                    if (!ValidationHelper.isValidString(et_confirmPassword, 3)) {
+                        return;
+                    }
+
+                    if (!et_newPassword.getText().toString().trim().equals(et_confirmPassword.getText().toString().trim())) {
+                        et_confirmPassword.setError("Password Mismatch");
+                        return;
+                    }
+
+
+                    String url = Constants.base_url + "resetpsw.php";
+
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("password", et_newPassword.getText().toString().trim());
+                    params.put("user_id", user_id);
+
+                    VolleyCall volley = new VolleyCall(ResetPasswordActivity.this, new DataCallListener() {
+                        @Override
+                        public void OnData(JSONObject jsonObject, String tag) {
+                            if (jsonObject.optInt("response") == 1) {
+                                finish();
+                            }
+                            if (!jsonObject.optString("message").isEmpty()) {
+                                Toast.makeText(ResetPasswordActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    volley.CallVolleyRequest(url, params, "reset_password");
+
+
                 }
-
-                if (!ValidationHelper.isValidString(et_confirmPassword, 3)) {
-                    return;
-                }
-
-                if (!et_newPassword.getText().toString().trim().equals(et_confirmPassword.getText().toString().trim())) {
-                    et_confirmPassword.setError("Password Mismatch");
-                    return;
-                }
-
-
-                String url = Constants.base_url + "resetpsw.php";
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put("password", et_newPassword.getText().toString().trim());
-                params.put("user_id", Constants.shared().getCitizen("user_id"));
-
-                VolleyCall volley = new VolleyCall(ResetPasswordActivity.this, ResetPasswordActivity.this);
-                volley.CallVolleyRequest(url, params, "reset_password");
-
-
-            }
-        });
-    }
-
-    @Override
-    public void OnData(JSONObject jsonObject, String tag) {
-
-        if (jsonObject.optInt("response") == 1) {
+            });
+        } else {
             finish();
-        }
-        if (!jsonObject.optString("message").isEmpty()) {
-            Toast.makeText(ResetPasswordActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
         }
     }
 }

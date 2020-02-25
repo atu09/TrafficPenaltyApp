@@ -42,6 +42,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private HomeActivity activity;
     private DrawerLayout drawer;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,20 +64,38 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             drawer.openDrawer(GravityCompat.START);
         }
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //navigationView.getMenu().clear();
-        //navigationView.inflateMenu(R.menu.police_drawer);
 
         TextView tvName = navigationView.getHeaderView(0).findViewById(R.id.tvName);
         TextView tvEmail = navigationView.getHeaderView(0).findViewById(R.id.tvEmail);
-        tvName.setText(Constants.shared().getCitizen("user_name"));
-        tvEmail.setText(Constants.shared().getCitizen("email"));
+        navigationView.getMenu().clear();
+        if (Constants.shared().isPolice()) {
+            navigationView.inflateMenu(R.menu.police_drawer);
+            tvName.setText(Constants.shared().getPolice("police_name"));
+            tvEmail.setText(Constants.shared().getPolice("m_no"));
+        } else {
+            navigationView.inflateMenu(R.menu.citizen_drawer);
+            tvName.setText(Constants.shared().getCitizen("user_name"));
+            tvEmail.setText(Constants.shared().getCitizen("email"));
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (Constants.shared().isCitizen()) {
+            MenuItem vehicleMenuItem = navigationView.getMenu().findItem(R.id.nav_add_vehicle);
+            MenuItem penaltyMenuItem = navigationView.getMenu().findItem(R.id.nav_my_penalty);
+            if (Constants.shared().isVehicle()) {
+                vehicleMenuItem.setTitle("My Vehicle");
+                penaltyMenuItem.setVisible(true);
+            } else {
+                vehicleMenuItem.setTitle("Add Vehicle");
+                penaltyMenuItem.setVisible(false);
+            }
+        }
         getNews();
     }
 
@@ -108,6 +127,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         volley.CallVolleyRequest(url, new HashMap<String, String>(), "get_news");
     }
 
+    private void myPenalty() {
+        Intent intent = new Intent(this, PenaltyHistoryActivity.class);
+        intent.putExtra("reg_no", Constants.shared().getVehicle("reg_number"));
+        startActivity(intent);
+    }
+
+    private void myVehicle() {
+        if (Constants.shared().isVehicle()) {
+            Intent intent = new Intent(this, AddVehicleActivity.class);
+            intent.putExtra("vehicle", new Gson().toJson(Constants.shared().getVehicle()));
+            startActivity(intent);
+        } else {
+            startActivity(new Intent(this, AddVehicleActivity.class));
+        }
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -117,13 +152,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 }
                 break;
             case R.id.nav_my_penalty:
-                startActivity(new Intent(this, CheckPenaltyActivity.class));
+                myPenalty();
+                //startActivity(new Intent(this, CheckPenaltyActivity.class));
                 break;
             case R.id.nav_generate_penalty:
                 startActivity(new Intent(this, GeneratePenaltyActivity.class));
                 break;
             case R.id.nav_add_vehicle:
-                startActivity(new Intent(this, SearchVehicleActivity.class));
+                myVehicle();
+                //startActivity(new Intent(this, SearchVehicleActivity.class));
                 break;
             case R.id.nav_penalty_history:
                 startActivity(new Intent(this, PenaltyHistoryActivity.class));
@@ -134,6 +171,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_notifications:
                 startActivity(new Intent(this, NotificationsActivity.class));
                 break;
+            case R.id.nav_password:
+                startActivity(new Intent(this, ChangePasswordActivity.class));
+                break;
             case R.id.nav_logout:
                 logoutDialog();
                 break;
@@ -141,6 +181,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
 
     void logoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);

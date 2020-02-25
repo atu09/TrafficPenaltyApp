@@ -25,6 +25,10 @@
             android:icon="@drawable/ic_action_notification"
             android:title="Notifications" />
         <item
+            android:id="@+id/nav_password"
+            android:icon="@android:drawable/ic_lock_idle_lock"
+            android:title="Change Password" />
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_action_logout"
             android:title="Logout" />

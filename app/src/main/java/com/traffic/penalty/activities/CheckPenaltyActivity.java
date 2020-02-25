@@ -21,7 +21,7 @@ public class CheckPenaltyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_check_penalty);
 
         et_reg = findViewById(R.id.et_reg);
-        et_reg.setText("GJ05HB6987");
+        //et_reg.setText("GJ05HB6987");
 
         findViewById(R.id.btn_check).setOnClickListener(new View.OnClickListener() {
             @Override

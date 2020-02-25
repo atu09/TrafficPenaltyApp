@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 import atirek.pothiwala.utility.helper.ValidationHelper;
 
-public class PoliceSignInActivity extends AppCompatActivity implements DataCallListener {
+public class PoliceSignInActivity extends AppCompatActivity {
 
     Button btn_verify;
     EditText et_mobile;
@@ -41,30 +41,29 @@ public class PoliceSignInActivity extends AppCompatActivity implements DataCallL
                     return;
                 }
 
-                String url = Constants.base_url + "login_police.php";
+                String url = Constants.base_url + "police_login.php";
                 HashMap<String, String> params = new HashMap<>();
-                params.put("mobile", et_mobile.getText().toString());
+                params.put("m_no", et_mobile.getText().toString());
 
-                VolleyCall volley = new VolleyCall(PoliceSignInActivity.this, PoliceSignInActivity.this);
+                VolleyCall volley = new VolleyCall(PoliceSignInActivity.this, new DataCallListener() {
+                    @Override
+                    public void OnData(JSONObject jsonObject, String tag) {
+                        if (jsonObject.optInt("response") == 1) {
+                            Intent intent = new Intent(PoliceSignInActivity.this, VerificationActivity.class);
+                            intent.putExtra("code", jsonObject.optString("verificationcode"));
+                            intent.putExtra("id", jsonObject.optString("id"));
+                            intent.putExtra("citizen", false);
+                            startActivity(intent);
+                            finish();
+                        }
+                        if (!jsonObject.optString("message").isEmpty()) {
+                            Toast.makeText(PoliceSignInActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 volley.CallVolleyRequest(url, params, "login");
 
             }
         });
-    }
-
-    @Override
-    public void OnData(JSONObject jsonObject, String tag) {
-        if (jsonObject.optInt("response") == 1) {
-            Constants.shared().setPolice(jsonObject.optString("data"));
-        }
-        if (!jsonObject.optString("message").isEmpty()) {
-            Toast.makeText(this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
-        }
-
-        if (Constants.shared().isPolice()) {
-            startActivity(new Intent(PoliceSignInActivity.this, VerificationActivity.class));
-            finish();
-        }
-
     }
 }

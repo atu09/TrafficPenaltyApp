@@ -38,8 +38,9 @@ import static atirek.pothiwala.utility.helper.ValidationHelper.ErrorText.cannotB
 
 public class AddVehicleActivity extends AppCompatActivity {
 
+
     EditText et_owner_name, et_owner_father_name, et_owner_address, et_reg;
-    TextView et_dor, et_dov;
+    TextView et_dor, et_dov, tvTitle;
     EditText et_chassis, et_engine, et_manufacturer, et_model, et_capacity;
     RadioGroup rg_vehicle, rg_fuelType;
     RadioButton btn_bike, btn_car, btn_truck, btn_diesel, btn_petrol;
@@ -53,6 +54,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         et_owner_address = findViewById(R.id.et_owner_address);
         et_reg = findViewById(R.id.et_reg);
 
+        tvTitle = findViewById(R.id.tvTitle);
         et_dor = findViewById(R.id.et_dor);
         et_dov = findViewById(R.id.et_dov);
 
@@ -77,10 +79,12 @@ public class AddVehicleActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra("vehicle")) {
+            tvTitle.setText("My Vehicle");
             disableView.setVisibility(View.VISIBLE);
             btn_submit.setVisibility(View.GONE);
             setup(new Gson().fromJson(intent.getStringExtra("vehicle"), VehicleItem.class));
         } else {
+            tvTitle.setText("Add Vehicle");
             disableView.setVisibility(View.GONE);
             btn_submit.setVisibility(View.VISIBLE);
         }
@@ -101,7 +105,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         et_capacity.setText(vehicleItem.seating_capacity);
 
 
-        if (vehicleItem.fuel_type.equalsIgnoreCase("petrol")){
+        if (vehicleItem.fuel_type.equalsIgnoreCase("petrol")) {
             btn_petrol.setChecked(true);
             btn_diesel.setChecked(false);
         } else {
@@ -109,11 +113,11 @@ public class AddVehicleActivity extends AppCompatActivity {
             btn_diesel.setChecked(true);
         }
 
-        if (vehicleItem.vehicle_class.equalsIgnoreCase("bike")){
+        if (vehicleItem.vehicle_class.equalsIgnoreCase("bike")) {
             btn_bike.setChecked(true);
             btn_car.setChecked(false);
             btn_truck.setChecked(false);
-        } else if (vehicleItem.vehicle_class.equalsIgnoreCase("car")){
+        } else if (vehicleItem.vehicle_class.equalsIgnoreCase("car")) {
             btn_bike.setChecked(false);
             btn_car.setChecked(true);
             btn_truck.setChecked(false);
@@ -226,6 +230,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         }
 
         HashMap<String, String> params = new HashMap<>();
+        params.put("user_id", Constants.shared().getCitizen("user_id"));
         params.put("reg_number", et_reg.getText().toString().trim());
         params.put("dor", DateHelper.getDate(et_dor.getText().toString(), "dd, MMM yyyy", "dd/MM/yyyy"));
         params.put("validity", DateHelper.getDate(et_dov.getText().toString(), "dd, MMM yyyy", "dd/MM/yyyy"));

@@ -18,6 +18,7 @@ import com.traffic.penalty.utils.VolleyCall;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import atirek.pothiwala.utility.helper.ValidationHelper;
 
@@ -53,10 +54,11 @@ public class CitizenSignInActivity extends AppCompatActivity implements DataCall
                     return;
                 }
 
-                String url = Constants.base_url + "login_user.php";
+                String url = Constants.base_url + "login.php";
                 HashMap<String, String> params = new HashMap<>();
                 params.put("email", et_email.getText().toString());
                 params.put("password", et_password.getText().toString());
+                params.put("token", UUID.randomUUID().toString());
 
                 VolleyCall volley = new VolleyCall(CitizenSignInActivity.this, CitizenSignInActivity.this);
                 volley.CallVolleyRequest(url, params, "login");
@@ -80,6 +82,7 @@ public class CitizenSignInActivity extends AppCompatActivity implements DataCall
     public void OnData(JSONObject jsonObject, String tag) {
         if (jsonObject.optInt("response") == 1) {
             Constants.shared().setCitizen(jsonObject.optString("data"));
+            Constants.shared().setVehicle(jsonObject.optString("vehicle_data"));
         }
         if (!jsonObject.optString("message").isEmpty()) {
             Toast.makeText(this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();

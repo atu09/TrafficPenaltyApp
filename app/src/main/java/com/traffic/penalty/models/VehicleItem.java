@@ -20,6 +20,8 @@ public class VehicleItem {
      * fuel_type : Petrol
      */
 
+
+
     public String rcbook_id;
     public String reg_number;
     public String dor;
