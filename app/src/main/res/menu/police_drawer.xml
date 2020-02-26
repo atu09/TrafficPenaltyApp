@@ -17,10 +17,6 @@
             android:icon="@drawable/ic_action_history"
             android:title="Penalty History" />
         <item
-            android:id="@+id/nav_notifications"
-            android:icon="@drawable/ic_action_notification"
-            android:title="Notifications" />
-        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_action_logout"
             android:title="Logout" />

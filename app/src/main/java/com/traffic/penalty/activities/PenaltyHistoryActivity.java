@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Locale;
 
 import atirek.pothiwala.utility.helper.DateHelper;
-import atirek.pothiwala.utility.helper.TextHelper;
 import atirek.pothiwala.utility.helper.Tools;
 
 public class PenaltyHistoryActivity extends AppCompatActivity {
@@ -44,6 +43,8 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
     ArrayAdapter<PenaltyItem> adapter;
     String reg_no;
     int payVisibility = View.VISIBLE;
+
+    boolean isCheck = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,21 +85,24 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
                 String date = DateHelper.getDate(paymentItem.penalty_date, "yyyy-MM-dd", "dd, MMM yyyy");
                 String time = DateHelper.getDate(paymentItem.penalty_time, "HH.mm", "hh:mm a");
                 tvDate.setText(String.format(Locale.getDefault(), "Generated on %s %s", date, time).trim());
-                tvStatus.setText(TextHelper.capitalizeWord(paymentItem.penalty_status));
                 tvAmount.setText(String.format(Locale.getDefault(), "Rs. %s", paymentItem.amount));
 
                 if (paymentItem.penalty_status.equalsIgnoreCase("pending")) {
                     tvStatus.setTextColor(Tools.getColor(PenaltyHistoryActivity.this, android.R.color.holo_red_dark));
+                    tvStatus.setText("Pending");
                     btnMakePayment.setVisibility(payVisibility);
                 } else {
                     tvStatus.setTextColor(Tools.getColor(PenaltyHistoryActivity.this, android.R.color.holo_green_dark));
+                    tvStatus.setText("Paid");
                     btnMakePayment.setVisibility(View.GONE);
                 }
 
                 btnMakePayment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        Intent intent = new Intent(PenaltyHistoryActivity.this, PenaltyDetailsActivity.class);
+                        intent.putExtra("penalty", new Gson().toJson(paymentItem));
+                        startActivity(intent);
                     }
                 });
 
@@ -109,30 +113,31 @@ public class PenaltyHistoryActivity extends AppCompatActivity {
                     }
                 });
 
-                convertView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(PenaltyHistoryActivity.this, PenaltyDetailsActivity.class);
-                        intent.putExtra("penalty", new Gson().toJson(paymentItem));
-                        startActivity(intent);
-                    }
-                });
-
                 return convertView;
             }
         };
         listView.setAdapter(adapter);
+
         Intent intent = getIntent();
         if (intent.hasExtra("reg_no")) {
             payVisibility = View.VISIBLE;
             reg_no = intent.getStringExtra("reg_no");
             tvTitle.setText("My Penalty - " + reg_no);
-
-            checkPenalties();
+            isCheck = true;
         } else {
             payVisibility = View.GONE;
             tvTitle.setText("Penalty History");
+            isCheck = false;
+        }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (isCheck){
+            checkPenalties();
+        } else {
             getPenalties();
         }
     }

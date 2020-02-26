@@ -9,7 +9,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.traffic.penalty.R;
 import com.traffic.penalty.activities.SplashActivity;
 
-import java.util.Map;
 import java.util.Random;
 
 import atirek.pothiwala.utility.helper.IntentHelper;
@@ -23,11 +22,8 @@ public class NotificationService extends FirebaseMessagingService {
 
         IntentHelper.checkLog("notification", "From: " + remoteMessage.getFrom());
         if (remoteMessage.getNotification() != null) {
-            IntentHelper.checkLog("notification", "Message Notification Body: " + remoteMessage.getNotification().getBody());
-        }
-
-        Map<String, String> notificationMessage = remoteMessage.getData();
-        if (notificationMessage.containsKey("title") && notificationMessage.containsKey("message")) {
+            String message = remoteMessage.getNotification().getBody();
+            IntentHelper.checkLog("notification", "Notification Message: " + message);
 
             int notificationId = new Random().nextInt();
             NotificationHelper notificationHelper = new NotificationHelper(this);
@@ -36,11 +32,10 @@ public class NotificationService extends FirebaseMessagingService {
             notificationHelper.setColor(R.color.colorPrimary);
             notificationHelper.setIcon(android.R.drawable.sym_def_app_icon);
 
-            if (notificationMessage.containsKey("title") && notificationMessage.containsKey("message")){
-                Intent intent = new Intent(this, SplashActivity.class);
-                notificationHelper.showNotification(notificationId, notificationMessage.get("title"), notificationMessage.get("message"), intent);
-            }
+            Intent intent = new Intent(this, SplashActivity.class);
+            notificationHelper.showNotification(notificationId, getString(R.string.app_name), message, intent);
         }
+
     }
 
     @Override

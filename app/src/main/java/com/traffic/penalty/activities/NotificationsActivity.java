@@ -73,6 +73,9 @@ public class NotificationsActivity extends AppCompatActivity {
 
     private void getNotifications() {
         String url = Constants.base_url + "get_notification.php";
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("reg_number", Constants.shared().getVehicle("reg_number"));
         VolleyCall volley = new VolleyCall(this, new DataCallListener() {
             @Override
             public void OnData(JSONObject jsonObject, String tag) {
@@ -90,6 +93,6 @@ public class NotificationsActivity extends AppCompatActivity {
 
             }
         });
-        volley.CallVolleyRequest(url, new HashMap<String, String>(), "get_notifications");
+        volley.CallVolleyRequest(url, params, "get_notifications");
     }
 }

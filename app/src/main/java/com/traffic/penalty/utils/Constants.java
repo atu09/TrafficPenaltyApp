@@ -18,7 +18,8 @@ public class Constants {
 
     private static Constants constants;
 
-    public static final String base_url = "http://192.168.2.8/project_tpa/api/";
+    public static final String base_url = "http://192.168.2.3/project_tpa/api/";
+    public static final String upload_url = base_url + "upload/";
 
     public static Constants shared() {
         if (constants == null) {

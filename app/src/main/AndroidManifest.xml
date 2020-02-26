@@ -130,6 +130,12 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="com.traffic.penalty.channel.id" />
+
+        <activity
+            android:name="com.sasidhar.smaps.payumoney.MakePaymentActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
     </application>
 
 </manifest>

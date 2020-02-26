@@ -8,6 +8,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +50,7 @@ import atirek.pothiwala.utility.helper.DateHelper;
 import atirek.pothiwala.utility.helper.PermissionHelper;
 import atirek.pothiwala.utility.helper.Tools;
 import atirek.pothiwala.utility.helper.ValidationHelper;
+import atirek.pothiwala.utility.listener.DoubleClickListener;
 import atirek.pothiwala.utility.views.SquareImageButton;
 import atirek.pothiwala.utility.views.SquareImageView;
 
@@ -58,7 +61,8 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
     private Button btn_generate;
     private SquareImageButton btn_scan;
     private LinearLayout layout_reasons;
-    private SquareImageView ivMedia;
+    private SquareImageView ivMedia1, ivMedia2;
+    int media_index = 1;
     private double total = 0.0;
 
     private FilePicker filePicker;
@@ -67,7 +71,8 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
             Manifest.permission.CAMERA
     };
 
-    private String media_id = "";
+    String media1 = "";
+    String media2 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +81,8 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
 
         tvPenalty = (TextView) findViewById(R.id.tvPenalty);
         et_reg = (EditText) findViewById(R.id.et_reg);
-        ivMedia = (SquareImageView) findViewById(R.id.ivMedia);
+        ivMedia1 = (SquareImageView) findViewById(R.id.ivMedia1);
+        ivMedia2 = (SquareImageView) findViewById(R.id.ivMedia2);
         layout_reasons = (LinearLayout) findViewById(R.id.layout_reasons);
         btn_generate = (Button) findViewById(R.id.btn_generate);
         btn_scan = (SquareImageButton) findViewById(R.id.btn_scan);
@@ -88,13 +94,26 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
             }
         });
 
-        ivMedia.setOnClickListener(new View.OnClickListener() {
+        ivMedia1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!PermissionHelper.checkPermissions(GeneratePenaltyActivity.this, permissions)) {
                     PermissionHelper.requestPermissions(GeneratePenaltyActivity.this, permissions, 1);
                     return;
                 }
+                media_index = 1;
+                openPickerDialog();
+            }
+        });
+
+        ivMedia2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!PermissionHelper.checkPermissions(GeneratePenaltyActivity.this, permissions)) {
+                    PermissionHelper.requestPermissions(GeneratePenaltyActivity.this, permissions, 1);
+                    return;
+                }
+                media_index = 2;
                 openPickerDialog();
             }
         });
@@ -131,13 +150,12 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
             return;
         }
 
-        StringBuilder builder = new StringBuilder();
-
+        List<String> reasons = new ArrayList<>();
         if (layout_reasons.getChildCount() > 0) {
             for (int i = 0; i < layout_reasons.getChildCount(); i++) {
                 CheckBox checkBox = (CheckBox) layout_reasons.getChildAt(i);
                 if (checkBox.isChecked()) {
-                    builder.append(checkBox.getText().toString()).append(",");
+                    reasons.add(checkBox.getText().toString());
                 }
             }
         }
@@ -146,12 +164,21 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
         params.put("police_id", Constants.shared().getPolice("police_id"));
         params.put("penalty_date", DateHelper.getDate(new Date(), "yyyy-MM-dd"));
         params.put("penalty_time", DateHelper.getDate(new Date(), "HH:mm"));
-        params.put("penalty_reason", builder.toString());
+        params.put("penalty_reason", TextUtils.join(",", reasons));
         params.put("amount", String.valueOf(total));
         params.put("penalty_status", "pending");
         params.put("reg_number", et_reg.getText().toString());
-        params.put("rcbook_id", "");
-        params.put("iv_id", media_id);
+        params.put("rcbook_id", et_reg.getText().toString());
+
+
+        List<String> mediaList = new ArrayList<>();
+        if (!TextUtils.isEmpty(media1)) {
+            mediaList.add(media1);
+        }
+        if (!TextUtils.isEmpty(media2)) {
+            mediaList.add(media2);
+        }
+        params.put("iv_id", TextUtils.join(",", mediaList));
 
         VolleyCall volley = new VolleyCall(GeneratePenaltyActivity.this, GeneratePenaltyActivity.this);
         String url = Constants.base_url + "generate_penalty.php";
@@ -161,7 +188,6 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
     @Override
     public void OnData(JSONObject jsonObject, String tag) {
         if (tag.equalsIgnoreCase("get_penalty_reasons")) {
-
             if (jsonObject.has("result")) {
                 Type listType = new TypeToken<List<PenaltyReasonItem>>() {
                 }.getType();
@@ -192,8 +218,32 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
                     layout_reasons.addView(checkboxView);
                 }
             }
-        } else if (tag.equalsIgnoreCase("upload_media")) {
 
+        } else if (tag.equalsIgnoreCase("upload_media")) {
+            if (jsonObject.optBoolean("status")) {
+                String media = jsonObject.optString("file_name");
+
+                if (media_index == 1) {
+                    media1 = media;
+                    Tools.loadImage(ivMedia1, Constants.upload_url + media, 0, true);
+                    ivMedia1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                } else {
+                    media2 = media;
+                    Tools.loadImage(ivMedia2, Constants.upload_url + media, 0, true);
+                    ivMedia2.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                }
+
+            }
+            if (jsonObject.has("message")) {
+                Toast.makeText(this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            if (jsonObject.optInt("response") == 1) {
+                finish();
+            }
+            if (!jsonObject.optString("message").isEmpty()) {
+                Toast.makeText(GeneratePenaltyActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -202,7 +252,9 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
         builder.setTitle("Select an action");
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.cell_picker);
         arrayAdapter.add("Capture Photo");
-        arrayAdapter.add("Record Video");
+        arrayAdapter.add("Gallery Photo");
+        arrayAdapter.add("");
+        arrayAdapter.add("Clear Photo");
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -218,8 +270,18 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
 
                 if (position == 0) {
                     filePicker.openPicker(FilePicker.FileSource.PHOTO_CAPTURE);
-                } else {
-                    filePicker.openPicker(FilePicker.FileSource.VIDEO_CAPTURE);
+                } else if (position == 1) {
+                    filePicker.openPicker(FilePicker.FileSource.PHOTO_GALLERY);
+                } else if (position == 3) {
+                    if (media_index == 1) {
+                        media1 = "";
+                        ivMedia1.setImageResource(R.drawable.ic_add);
+                        ivMedia1.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    } else {
+                        media2 = "";
+                        ivMedia2.setImageResource(R.drawable.ic_add);
+                        ivMedia2.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    }
                 }
             }
         });
@@ -257,10 +319,13 @@ public class GeneratePenaltyActivity extends AppCompatActivity implements DataCa
         @Override
         public void onPicked(File file, FilePicker.FileSource fileSource) {
 
+            String url = Constants.base_url + "file_upload.php";
             VolleyCall volley = new VolleyCall(GeneratePenaltyActivity.this, GeneratePenaltyActivity.this);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("image_name", file.getName());
             Map<String, VolleyMultipartRequest.DataPart> dataParams = new HashMap<>();
-            dataParams.put("image", new VolleyMultipartRequest.DataPart(file.getName(), readFiles(file)));
-            volley.CallVolleyUpload("", new HashMap<String, String>(), dataParams, "upload_media");
+            dataParams.put("uploaded_file", new VolleyMultipartRequest.DataPart(file.getName(), readFiles(file)));
+            volley.CallVolleyUpload(url, params, dataParams, "upload_media");
 
         }
 

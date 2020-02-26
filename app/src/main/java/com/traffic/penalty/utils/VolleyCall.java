@@ -114,7 +114,7 @@ public class VolleyCall {
                 @Override
                 public void onResponse(NetworkResponse response) {
                     String json = new String(response.data);
-                    Log.d(tag + ">>", "Response: " + response.toString());
+                    Log.d(tag + ">>", "Response: " + json);
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
