@@ -59,6 +59,10 @@ public class PoliceSignInActivity extends AppCompatActivity {
                         if (!jsonObject.optString("message").isEmpty()) {
                             Toast.makeText(PoliceSignInActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
                         }
+
+                        if (!jsonObject.optString("verificationcode").isEmpty()) {
+                            Toast.makeText(PoliceSignInActivity.this, jsonObject.optString("verificationcode"), Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
                 volley.CallVolleyRequest(url, params, "login");

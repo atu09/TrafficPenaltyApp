@@ -91,7 +91,7 @@ public class CitizenSignUpActivity extends AppCompatActivity {
         });
     }
 
-    private void signUp(String token) {
+    private void signUp(final String token) {
 
 
         String url = Constants.base_url + "registration.php";
@@ -108,13 +108,11 @@ public class CitizenSignUpActivity extends AppCompatActivity {
             @Override
             public void OnData(JSONObject jsonObject, String tag) {
                 if (jsonObject.optInt("response") == 1) {
-                    Constants.shared().setCitizen(jsonObject.optString("data"));
+                    signIn(token);
                 }
                 if (!jsonObject.optString("message").isEmpty()) {
                     Toast.makeText(CitizenSignUpActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
                 }
-
-                checkLogin();
             }
         });
         volley.CallVolleyRequest(url, params, "registration");
@@ -129,5 +127,35 @@ public class CitizenSignUpActivity extends AppCompatActivity {
             startActivity(new Intent(CitizenSignUpActivity.this, HomeActivity.class));
             finish();
         }
+    }
+
+    private void signIn(String token){
+
+        String url = Constants.base_url + "login.php";
+        HashMap<String, String> params = new HashMap<>();
+        params.put("email", et_email.getText().toString());
+        params.put("password", et_password.getText().toString());
+        params.put("token", token);
+
+        VolleyCall volley = new VolleyCall(CitizenSignUpActivity.this, new DataCallListener() {
+            @Override
+            public void OnData(JSONObject jsonObject, String tag) {
+
+                if (jsonObject.optInt("response") == 1) {
+                    Constants.shared().setCitizen(jsonObject.optString("data"));
+                    Constants.shared().setVehicle(jsonObject.optString("vehicle_data"));
+                }
+                if (!jsonObject.optString("message").isEmpty()) {
+                    Toast.makeText(CitizenSignUpActivity.this, jsonObject.optString("message"), Toast.LENGTH_SHORT).show();
+                }
+
+                if (Constants.shared().isCitizen()) {
+                    startActivity(new Intent(CitizenSignUpActivity.this, HomeActivity.class));
+                    finish();
+                }
+
+            }
+        });
+        volley.CallVolleyRequest(url, params, "login");
     }
 }
